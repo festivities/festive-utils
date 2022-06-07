@@ -31,7 +31,7 @@ int main(){
 
     double finalScale = mapRange(0.0, 100.0, min_out, max_out, desiredScale);
 
-    std::cout << "Final scale:" << finalScale << std::endl;
+    std::cout << "Final scale: " << finalScale << std::endl;
 
     return 0;
 }

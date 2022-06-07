@@ -16,30 +16,22 @@ double mapRange(const double min_in, const double max_in,
 }
 
 int main(){
-    /* CHANGE THESE VALUES */
-    const double min_out_X = 0.92;
-    const double min_out_Y = 0.8;
-    const double min_out_Z = 0.816;
+    double min_out;
+    double max_out;
 
-    const double max_out_X = 1.08;
-    const double max_out_Y = 1.2;
-    const double max_out_Z = 1.184;
+    double desiredScale;
 
-    const double desiredScale = 39;
-    /* CHANGE THESE VALUES */
+    std::cout << "Initial range is 0 to 100. Input slider value: ";
+    std::cin >> desiredScale;
 
-    double finalScale_X = mapRange(0.0, 100.0, min_out_X, max_out_X, desiredScale);
-    double finalScale_Y = mapRange(0.0, 100.0, min_out_Y, max_out_Y, desiredScale);
-    double finalScale_Z = mapRange(0.0, 100.0, min_out_Z, max_out_Z, desiredScale);
+    std::cout << "Input minimum of output range: ";
+    std::cin >> min_out;
+    std::cout << "Input maximum of output range: ";
+    std::cin >> max_out;
 
-    const double &finalScale_Y_Blender = finalScale_Z;
-    const double &finalScale_Z_Blender = finalScale_Y;
+    double finalScale = mapRange(0.0, 100.0, min_out, max_out, desiredScale);
 
-    std::cout << "X, Y, Z:                           " << finalScale_X 
-              << ", " << finalScale_Y << ", " << finalScale_Z << std::endl;
-    std::cout << "X, Y, Z (for Z-up (i.e. Blender)): " << finalScale_X 
-              << ", " << finalScale_Y_Blender << ", " << finalScale_Z_Blender 
-              << std::endl;
+    std::cout << "Final scale:" << finalScale << std::endl;
 
     return 0;
 }

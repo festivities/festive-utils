@@ -1,0 +1,15 @@
+D:\dev\projects\festive-utils\misc\escape2bin\bin\Debug\net8.0\escape2bin.exe
+D:\dev\projects\festive-utils\misc\escape2bin\bin\Debug\net8.0\escape2bin.deps.json
+D:\dev\projects\festive-utils\misc\escape2bin\bin\Debug\net8.0\escape2bin.runtimeconfig.json
+D:\dev\projects\festive-utils\misc\escape2bin\bin\Debug\net8.0\escape2bin.dll
+D:\dev\projects\festive-utils\misc\escape2bin\bin\Debug\net8.0\escape2bin.pdb
+D:\dev\projects\festive-utils\misc\escape2bin\obj\Debug\net8.0\escape2bin.GeneratedMSBuildEditorConfig.editorconfig
+D:\dev\projects\festive-utils\misc\escape2bin\obj\Debug\net8.0\escape2bin.AssemblyInfoInputs.cache
+D:\dev\projects\festive-utils\misc\escape2bin\obj\Debug\net8.0\escape2bin.AssemblyInfo.cs
+D:\dev\projects\festive-utils\misc\escape2bin\obj\Debug\net8.0\escape2bin.csproj.CoreCompileInputs.cache
+D:\dev\projects\festive-utils\misc\escape2bin\obj\Debug\net8.0\escape2bin.sourcelink.json
+D:\dev\projects\festive-utils\misc\escape2bin\obj\Debug\net8.0\escape2bin.dll
+D:\dev\projects\festive-utils\misc\escape2bin\obj\Debug\net8.0\refint\escape2bin.dll
+D:\dev\projects\festive-utils\misc\escape2bin\obj\Debug\net8.0\escape2bin.pdb
+D:\dev\projects\festive-utils\misc\escape2bin\obj\Debug\net8.0\escape2bin.genruntimeconfig.cache
+D:\dev\projects\festive-utils\misc\escape2bin\obj\Debug\net8.0\ref\escape2bin.dll

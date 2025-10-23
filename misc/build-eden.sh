@@ -6,7 +6,19 @@
 
 eval "$(./vcvarsall.sh x64)"
 
-COMPILER="clang"
+COMPILER="MSVC"
+
+if [ "$COMPILER" == "MSVC" ]
+then
+    EXTRA_CMAKE_FLAGS+=(
+        -DCMAKE_CXX_COMPILER="cl.exe"
+        -DCMAKE_C_COMPILER="cl.exe"
+        -DCMAKE_CXX_FLAGS="-O3"
+        -DCMAKE_C_FLAGS="-O3"
+    )
+
+    BUILD_TYPE="Release"
+fi
 
 if [ "$COMPILER" == "clang" ]
 then

@@ -1,0 +1,11 @@
+schema_version = "1.0.0"
+
+id = "copy_rgba_driver"
+version = "1.0.0"
+name = "Copy RGBA Driver"
+tagline = "Copy/paste RGB and RGBA colour properties as per-channel drivers"
+maintainer = "Antigravity"
+type = "add-on"
+
+blender_version_min = "5.1.0"
+license = ["SPDX:GPL-3.0-or-later"]

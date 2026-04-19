@@ -22,6 +22,17 @@ RENAME_MAP = {
     "Bip001 L Hand": "Hand.L",
     "Bip001 R Hand": "Hand.R",
 
+    "Bip001_L_UpArmTwist01": "UpperArm_1.L",
+    "Bip001_R_UpArmTwist01": "UpperArm_1.R",
+    "Bip001_L_UpArmTwist02": "UpperArm_2.L",
+    "Bip001_R_UpArmTwist02": "UpperArm_2.R",
+    "Bip001 L Thigh_Twis": "Thigh_1.L",
+    "Bip001 R Thigh_Twis": "Thigh_1.R",
+    "Bip001 L Thigh": "Thigh_2.L",
+    "Bip001 R Thigh": "Thigh_2.R",
+    "Bip001 L Calf Adv": "Knee_1.L",
+    "Bip001 R Calf Adv": "Knee_1.R",
+
     "Bip001 L Finger0": "Finger_Thumb1.L",
     "Bip001 L Finger01": "Finger_Thumb2.L",
     "Bip001 L Finger02": "Finger_Thumb3.L",
@@ -63,24 +74,45 @@ RENAME_MAP = {
     "Bip001 R Toe0": "Toes.R",
 }
 
-def rename_armature_bones(armature_obj, rename_map):
-    """Renames bones in the given armature based on the rename_map."""
+def rename_armature_bones(armature_obj, base_map):
+    """Renames bones in the given armature based on the base_map."""
     if armature_obj.type != 'ARMATURE':
         return
         
     is_edit_mode = (armature_obj.mode == 'EDIT')
     renamed_count = 0
     
+    # Generate dynamic map for this armature
+    data = armature_obj.data
+    def exists(name):
+        if is_edit_mode:
+            return name in data.edit_bones
+        else:
+            return name in data.bones
+
+    local_map = base_map.copy()
+    for side in ['L', 'R']:
+        twist_name = f"Bip001_{side}_ForeTwist"
+        adv_name = f"Bip001 {side} Forearm Adv"
+        has_twist = exists(twist_name)
+        has_adv = exists(adv_name)
+        
+        if has_twist and has_adv:
+            local_map[adv_name] = f"Forearm_1.{side}"
+            local_map[twist_name] = f"Forearm_2.{side}"
+        elif has_twist:
+            local_map[twist_name] = f"Forearm_1.{side}"
+            
     # Use edit_bones if we're in Edit Mode, otherwise use bones.
     if is_edit_mode:
-        for old_name, new_name in rename_map.items():
-            bone = armature_obj.data.edit_bones.get(old_name)
+        for old_name, new_name in local_map.items():
+            bone = data.edit_bones.get(old_name)
             if bone:
                 bone.name = new_name
                 renamed_count += 1
     else:
-        for old_name, new_name in rename_map.items():
-            bone = armature_obj.data.bones.get(old_name)
+        for old_name, new_name in local_map.items():
+            bone = data.bones.get(old_name)
             if bone:
                 bone.name = new_name
                 renamed_count += 1
@@ -88,13 +120,27 @@ def rename_armature_bones(armature_obj, rename_map):
     if renamed_count > 0:
         print(f"Renamed {renamed_count} bones in '{armature_obj.name}'.")
 
-def rename_mesh_vertex_groups(mesh_obj, rename_map):
-    """Renames vertex groups in the given mesh based on the rename_map."""
+def rename_mesh_vertex_groups(mesh_obj, base_map):
+    """Renames vertex groups in the given mesh based on the base_map."""
     if mesh_obj.type != 'MESH':
         return
     
     renamed_count = 0
-    for old_name, new_name in rename_map.items():
+    
+    local_map = base_map.copy()
+    for side in ['L', 'R']:
+        twist_name = f"Bip001_{side}_ForeTwist"
+        adv_name = f"Bip001 {side} Forearm Adv"
+        has_twist = twist_name in mesh_obj.vertex_groups
+        has_adv = adv_name in mesh_obj.vertex_groups
+        
+        if has_twist and has_adv:
+            local_map[adv_name] = f"Forearm_1.{side}"
+            local_map[twist_name] = f"Forearm_2.{side}"
+        elif has_twist:
+            local_map[twist_name] = f"Forearm_1.{side}"
+            
+    for old_name, new_name in local_map.items():
         vg = mesh_obj.vertex_groups.get(old_name)
         if vg:
             vg.name = new_name

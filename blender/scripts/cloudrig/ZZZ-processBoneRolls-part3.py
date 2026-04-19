@@ -29,6 +29,13 @@ def get_rename_map_values():
         "Thigh.L", "Thigh.R", "Knee.L", "Knee.R", "Foot.L", "Foot.R", "Toes.L", "Toes.R"
     }
 
+def flip_these():
+    return {
+        "Shoulder.L", "Shoulder.R", "UpperArm.L", "UpperArm.R", "Forearm.L", "Forearm.R", "Hand.L", "Hand.R",
+        "Thigh.L", "Thigh.R", "Knee.L", "Knee.R", "Foot.L", "Foot.R", "Toes.L", "Toes.R",
+        "Thigh_1.L", "Thigh_1.R", "Thigh_2.L", "Thigh_2.R"
+    }
+
 def process_bone_rolls(armature_obj):
     if armature_obj.type != 'ARMATURE':
         return
@@ -39,9 +46,10 @@ def process_bone_rolls(armature_obj):
     edit_bones = armature_obj.data.edit_bones
     
     rename_map_values = get_rename_map_values()
+    fingers = flip_these()
     
     for bone in edit_bones:
-        if bone.name in SPINE_BONES:
+        if bone.name in flip_these():
             # 1. Flip 180 degrees
             bone.roll += math.pi
         elif bone.name in rename_map_values:
@@ -54,11 +62,8 @@ def process_bone_rolls(armature_obj):
                 l_name = bone.name[:-2] + ".L"
                 if l_name in edit_bones:
                     bone.roll = -edit_bones[l_name].roll
-        else:
-            # 3. For all bones not in the values part of the dictionary, flip them 180 degrees
-            bone.roll += math.pi
             
-    # 4. Lastly, round to nearest multiple of 180 if within epsilon
+    # 3. Lastly, round to nearest multiple of 180 if within epsilon
     epsilon = 0.01
     for bone in edit_bones:
         multiple = round(bone.roll / math.pi)

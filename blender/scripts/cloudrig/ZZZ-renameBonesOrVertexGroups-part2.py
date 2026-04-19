@@ -17,6 +17,8 @@ RENAME_MAP = {
     "Bip001 R Clavicle": "Shoulder.R",
     "Bip001 L UpperArm": "UpperArm.L",
     "Bip001 R UpperArm": "UpperArm.R",
+    "Elbow_L": "Elbow.L",
+    "Elbow_R": "Elbow.R",
     "Bip001 L Forearm": "Forearm.L",
     "Bip001 R Forearm": "Forearm.R",
     "Bip001 L Hand": "Hand.L",
@@ -28,6 +30,8 @@ RENAME_MAP = {
     "Bip001_R_UpArmTwist02": "UpperArm_2.R",
     "Bip001 L Thigh_Twis": "Thigh_1.L",
     "Bip001 R Thigh_Twis": "Thigh_1.R",
+    "Bip001 LThighTwist": "Thigh_1.L",
+    "Bip001 RThighTwist": "Thigh_1.R",
     "Bip001 L Thigh": "Thigh_2.L",
     "Bip001 R Thigh": "Thigh_2.R",
     "Bip001 L Calf Adv": "Knee_1.L",
@@ -64,8 +68,9 @@ RENAME_MAP = {
     "Bip001 R Finger41": "Finger_Pinky2.R",
     "Bip001 R Finger42": "Finger_Pinky3.R",
 
-    "Bip001 L Thigh": "Thigh.L",
-    "Bip001 R Thigh": "Thigh.R",
+    # CREATE THIGH.L and THIGH.R IN LATER PARTS 
+    "knee_L": "Kneecap.L",
+    "knee_R": "Kneecap.R",
     "Bip001 L Calf": "Knee.L",
     "Bip001 R Calf": "Knee.R",
     "Bip001 L Foot": "Foot.L",
@@ -81,7 +86,17 @@ def rename_armature_bones(armature_obj, base_map):
         
     is_edit_mode = (armature_obj.mode == 'EDIT')
     renamed_count = 0
+    deleted_count = 0
     
+    # Get linked meshes to check for vertex groups
+    linked_meshes = get_meshes_for_armature(armature_obj)
+    
+    def adv_exists_in_meshes(adv_name):
+        for mesh in linked_meshes:
+            if adv_name in mesh.vertex_groups:
+                return True
+        return False
+        
     # Generate dynamic map for this armature
     data = armature_obj.data
     def exists(name):
@@ -91,11 +106,19 @@ def rename_armature_bones(armature_obj, base_map):
             return name in data.bones
 
     local_map = base_map.copy()
+    bones_to_delete = []
+    
     for side in ['L', 'R']:
         twist_name = f"Bip001_{side}_ForeTwist"
         adv_name = f"Bip001 {side} Forearm Adv"
         has_twist = exists(twist_name)
-        has_adv = exists(adv_name)
+        has_adv_bone = exists(adv_name)
+        
+        has_adv = False
+        if has_adv_bone:
+            has_adv = adv_exists_in_meshes(adv_name)
+            if not has_adv:
+                bones_to_delete.append(adv_name)
         
         if has_twist and has_adv:
             local_map[adv_name] = f"Forearm_1.{side}"
@@ -103,6 +126,21 @@ def rename_armature_bones(armature_obj, base_map):
         elif has_twist:
             local_map[twist_name] = f"Forearm_1.{side}"
             
+    if bones_to_delete:
+        was_in_object_mode = not is_edit_mode
+        if was_in_object_mode:
+            bpy.context.view_layer.objects.active = armature_obj
+            bpy.ops.object.mode_set(mode='EDIT')
+            
+        for b_name in bones_to_delete:
+            eb = armature_obj.data.edit_bones.get(b_name)
+            if eb:
+                armature_obj.data.edit_bones.remove(eb)
+                deleted_count += 1
+                
+        if was_in_object_mode:
+            bpy.ops.object.mode_set(mode='OBJECT')
+
     # Use edit_bones if we're in Edit Mode, otherwise use bones.
     if is_edit_mode:
         for old_name, new_name in local_map.items():
@@ -117,6 +155,8 @@ def rename_armature_bones(armature_obj, base_map):
                 bone.name = new_name
                 renamed_count += 1
                 
+    if deleted_count > 0:
+        print(f"Deleted {deleted_count} unused bones in '{armature_obj.name}'.")
     if renamed_count > 0:
         print(f"Renamed {renamed_count} bones in '{armature_obj.name}'.")
 

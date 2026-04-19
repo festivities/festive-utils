@@ -1,0 +1,17 @@
+schema_version = "1.0.0"
+
+id = "bone_roller"
+version = "1.0.0"
+name = "Bone Roller"
+description = "Aids in editing bone rolls"
+author = "Festive"
+maintainer = "Festive"
+buildinfo = false
+
+blender_version_min = "4.2.0"
+
+license = [
+    "SPDX-License-Identifier: GPL-2.0-or-later",
+]
+
+tags = ["Rigging", "Animation"]

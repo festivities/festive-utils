@@ -19,19 +19,37 @@ def add_cloud_human_bone_collections():
                 coll.parent = parent_coll
         return coll
         
-    get_or_create("IK Controls")
-    get_or_create("IK Secondary", "IK Controls")
+    get_or_create("Spine")
+    get_or_create("Spine Tweak", "Spine")
+    get_or_create("Spine Extra", "Spine")
     
-    get_or_create("FK Controls")
-    get_or_create("FK Secondary", "FK Controls")
+    get_or_create("Arms")
+    get_or_create("Arms IK", "Arms")
+    get_or_create("Arms FK", "Arms")
+    get_or_create("Arms Tweak", "Arms")
+    get_or_create("Arms Extra", "Arms")
     
-    get_or_create("Stretch Controls")
+    get_or_create("Legs")
+    get_or_create("Legs IK", "Legs")
+    get_or_create("Legs FK", "Legs")
+    get_or_create("Legs Tweak", "Legs")
+    get_or_create("Legs Extra", "Legs")
     
     get_or_create("Hair")
     get_or_create("Hair Stretch", "Hair")
     
     get_or_create("Fingers")
     get_or_create("Finger Stretch", "Fingers")
+
+    get_or_create("Face")
+
+    get_or_create("Physics")
+    get_or_create("Physics Stretch", "Physics")
+    get_or_create("Physics Extra", "Physics")
+
+    get_or_create("Weapon")
+    
+    get_or_create("Root")
     
     get_or_create("Rigging")
     get_or_create("Deform Bones", "Rigging")

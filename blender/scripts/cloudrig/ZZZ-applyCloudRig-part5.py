@@ -377,7 +377,7 @@ def process_armature():
             except AttributeError:
                 pass
 
-    eye_bones = ['Eyes.L', 'Eyes.R']
+    eye_bones = ['Eye.L', 'Eye.R']
     for bone_name in eye_bones:
         pbone = obj.pose.bones.get(bone_name)
         if not pbone:

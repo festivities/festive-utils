@@ -100,7 +100,7 @@ def process_armature():
     
     sided_chains = [
         ["Thigh.X", "Knee.X", "Foot.X", "Toes.X"],
-        ["Shoulder.X", "UpperArm.X", "Elbow.X", "Forearm.X", "Hand.X"],
+        ["Shoulder.X", "UpperArm.X", "Forearm.X", "Hand.X"],
         ["Finger_Thumb1.X", "Finger_Thumb2.X", "Finger_Thumb3.X"],
         ["Finger_Index1.X", "Finger_Index2.X", "Finger_Index3.X"],
         ["Finger_Middle1.X", "Finger_Middle2.X", "Finger_Middle3.X"],
@@ -191,8 +191,8 @@ def process_armature():
         
     for bone in armature.bones:
         rigging_coll.assign(bone)
-        bone.bbone_x = 0.001
-        bone.bbone_z = 0.001
+        bone.bbone_x = 0.003
+        bone.bbone_z = 0.003
 
     # 10. Set colors for Root and Properties bones
     for b_name, normal_hex in [("Root", "#B078AD"), ("Properties", "#00FF97")]:

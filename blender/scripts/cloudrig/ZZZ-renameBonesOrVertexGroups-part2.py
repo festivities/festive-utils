@@ -6,7 +6,7 @@ import bpy
 # RENAME_MAP = { "OldName": "NewName" }
 # =========================================================================
 RENAME_MAP = {
-    "Bip001": "root",
+    "Bip001": "Root",
 
     "Bip001 Pelvis": "Hips",
     "Bip001 Spine": "Spine0",

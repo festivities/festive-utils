@@ -33,7 +33,9 @@ def flip_these():
     return {
         "Shoulder.L", "Shoulder.R", "UpperArm.L", "UpperArm.R", "Forearm.L", "Forearm.R", "Hand.L", "Hand.R",
         "Thigh.L", "Thigh.R", "Knee.L", "Knee.R", "Foot.L", "Foot.R", "Toes.L", "Toes.R",
-        "Thigh_1.L", "Thigh_1.R", "Thigh_2.L", "Thigh_2.R"
+        "Thigh_1.L", "Thigh_1.R", "Thigh_2.L", "Thigh_2.R",
+        "Breast.L", "Breast.R",
+        "Eye.L", "Eye.R",
     }
 
 def process_bone_rolls(armature_obj):

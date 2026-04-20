@@ -15,6 +15,11 @@ RENAME_MAP = {
     "Bip001 Neck": "Neck",
     "Bip001 Head": "Head",
 
+    "Chest_L": "Breast.L",
+    "Chest_R": "Breast.R",
+    "Eye_L": "Eye.L",
+    "Eye_R": "Eye.R",
+
     "Bip001 L Clavicle": "Shoulder.L",
     "Bip001 R Clavicle": "Shoulder.R",
     "Bip001 L UpperArm": "UpperArm.L",

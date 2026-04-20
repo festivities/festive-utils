@@ -44,6 +44,8 @@ def add_cloud_human_bone_collections():
     get_or_create("Finger Stretch", "Fingers")
 
     get_or_create("Face")
+    get_or_create("Face Main", "Face")
+    get_or_create("Face Secondary", "Face")
 
     get_or_create("Physics")
     get_or_create("Physics Stretch", "Physics")

@@ -184,13 +184,15 @@ def process_armature():
         h = h.lstrip('#')
         return tuple(srgb_to_linear(int(h[i:i+2], 16) / 255.0) for i in (0, 2, 4))
 
-    # 9. Assign all bones to "Rigging" collection
+    # 9. Assign all bones to "Rigging" collection and set BBone width
     rigging_coll = armature.collections.get("Rigging")
     if not rigging_coll:
         rigging_coll = armature.collections.new("Rigging")
         
     for bone in armature.bones:
         rigging_coll.assign(bone)
+        bone.bbone_x = 0.001
+        bone.bbone_z = 0.001
 
     # 10. Set colors for Root and Properties bones
     for b_name, normal_hex in [("Root", "#B078AD"), ("Properties", "#00FF97")]:
@@ -207,6 +209,9 @@ def process_armature():
             pb.color.custom.normal = hex_to_rgb(normal_hex)
             pb.color.custom.select = hex_to_rgb("#98E5FF")
             pb.color.custom.active = hex_to_rgb("#C4FFFF")
+
+    # 11. Turn all bones into B-Bones
+    armature.display_type = 'BBONE'
 
     print("Process complete.")
 

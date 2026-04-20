@@ -8,6 +8,8 @@ def process_armature():
 
     # Make the selected armature a CloudRig
     obj.cloudrig.enabled = True
+    obj.cloudrig.generator.ensure_root = "Root"
+    obj.cloudrig.generator.properties_bone = "Properties"
     
     # Need to be in pose mode to interact with rig components
     bpy.ops.object.mode_set(mode='POSE')
@@ -46,7 +48,6 @@ def process_armature():
         set_param(comp, 'segments', 2)
         set_param(comp, 'hinge', True)
         set_param(comp, 'use_pole', True)
-        set_param(comp, 'pole_parent_switch', 'FOLLOW')
         set_param(comp, 'world_align', True)
         set_param(comp, 'limit_elbow_axes', True)
         set_param(comp, 'use_foot_roll', True)
@@ -72,6 +73,303 @@ def process_armature():
                 bone_set = getattr(comp.params.bone_sets, prop_name)
                 if hasattr(bone_set, 'ui_name') and bone_set.ui_name in bone_set_mapping:
                     target_coll = bone_set_mapping[bone_set.ui_name]
+                    if len(bone_set.collections) > 0:
+                        bone_set.collections[0].name = target_coll
+                    else:
+                        bone_set.collections.add().name = target_coll
+            except AttributeError:
+                pass
+
+    hips_pbone = obj.pose.bones.get("Hips")
+    if hips_pbone:
+        comp = hips_pbone.cloudrig_component
+        comp.component_type = "Spine: Cartoon"
+        
+        if hasattr(comp, 'update_ui_bone_sets'):
+            comp.update_ui_bone_sets()
+            
+        def set_param_hips(comp, param_name, value):
+            for group_name in dir(comp.params):
+                if group_name.startswith('__'): continue
+                try:
+                    group = getattr(comp.params, group_name)
+                    if hasattr(group, param_name):
+                        setattr(group, param_name, value)
+                        return
+                except Exception:
+                    pass
+            print(f"Warning: Param {param_name} not found for Hips")
+            
+        set_param_hips(comp, 'base_name', "Spine")
+        set_param_hips(comp, 'hinge', False)
+        set_param_hips(comp, 'world_align', True)
+        
+        spine_bone_set_mapping = {
+            "FK Controls": "Spine FK",
+            "FK Controls Extra": "Spine Extra",
+            "Toon Spine IK": "Spine IK",
+            "Toon Spine IK Secondary": "Spine Extra",
+            "Stretch Controls": "Spine Tweak"
+        }
+        
+        for prop_name in dir(comp.params.bone_sets):
+            if prop_name.startswith('__') or prop_name in ['name', 'rna_type']: 
+                continue
+            try:
+                bone_set = getattr(comp.params.bone_sets, prop_name)
+                if hasattr(bone_set, 'ui_name') and bone_set.ui_name in spine_bone_set_mapping:
+                    target_coll = spine_bone_set_mapping[bone_set.ui_name]
+                    if len(bone_set.collections) > 0:
+                        bone_set.collections[0].name = target_coll
+                    else:
+                        bone_set.collections.add().name = target_coll
+            except AttributeError:
+                pass
+
+    neck_pbone = obj.pose.bones.get("Neck")
+    if neck_pbone:
+        comp = neck_pbone.cloudrig_component
+        comp.component_type = "Chain: FK"
+        
+        if hasattr(comp, 'update_ui_bone_sets'):
+            comp.update_ui_bone_sets()
+            
+        def set_param_neck(comp, param_name, value):
+            for group_name in dir(comp.params):
+                if group_name.startswith('__'): continue
+                try:
+                    group = getattr(comp.params, group_name)
+                    if hasattr(group, param_name):
+                        setattr(group, param_name, value)
+                        return
+                except Exception:
+                    pass
+            print(f"Warning: Param {param_name} not found for Neck")
+            
+        set_param_neck(comp, 'segments', 1)
+        set_param_neck(comp, 'root', True)
+        set_param_neck(comp, 'hinge', True)
+        set_param_neck(comp, 'bbone_density', 32)
+        set_param_neck(comp, 'sharp', True)
+        set_param_neck(comp, 'shape_key_helpers', True)
+        
+        neck_bone_set_mapping = {
+            "FK Controls": "Spine FK",
+            "FK Controls Extra": "Spine Extra",
+            "Stretch Controls": "Spine Tweak"
+        }
+        
+        for prop_name in dir(comp.params.bone_sets):
+            if prop_name.startswith('__') or prop_name in ['name', 'rna_type']: 
+                continue
+            try:
+                bone_set = getattr(comp.params.bone_sets, prop_name)
+                if hasattr(bone_set, 'ui_name') and bone_set.ui_name in neck_bone_set_mapping:
+                    target_coll = neck_bone_set_mapping[bone_set.ui_name]
+                    if len(bone_set.collections) > 0:
+                        bone_set.collections[0].name = target_coll
+                    else:
+                        bone_set.collections.add().name = target_coll
+            except AttributeError:
+                pass
+
+    head_pbone = obj.pose.bones.get("Head")
+    if head_pbone:
+        comp = head_pbone.cloudrig_component
+        comp.component_type = "Chain: FK"
+        
+        if hasattr(comp, 'update_ui_bone_sets'):
+            comp.update_ui_bone_sets()
+            
+        def set_param_head(comp, param_name, value):
+            for group_name in dir(comp.params):
+                if group_name.startswith('__'): continue
+                try:
+                    group = getattr(comp.params, group_name)
+                    if hasattr(group, param_name):
+                        setattr(group, param_name, value)
+                        return
+                except Exception:
+                    pass
+            print(f"Warning: Param {param_name} not found for Head")
+            
+        set_param_head(comp, 'segments', 1)
+        set_param_head(comp, 'tip_control', True)
+        set_param_head(comp, 'root', True)
+        set_param_head(comp, 'hinge', True)
+        
+        head_bone_set_mapping = {
+            "FK Controls": "Spine FK",
+            "FK Controls Extra": "Spine Extra",
+            "Stretch Controls": "Spine Tweak"
+        }
+        
+        for prop_name in dir(comp.params.bone_sets):
+            if prop_name.startswith('__') or prop_name in ['name', 'rna_type']: 
+                continue
+            try:
+                bone_set = getattr(comp.params.bone_sets, prop_name)
+                if hasattr(bone_set, 'ui_name') and bone_set.ui_name in head_bone_set_mapping:
+                    target_coll = head_bone_set_mapping[bone_set.ui_name]
+                    if len(bone_set.collections) > 0:
+                        bone_set.collections[0].name = target_coll
+                    else:
+                        bone_set.collections.add().name = target_coll
+            except AttributeError:
+                pass
+
+    shoulder_bones = ['Shoulder.L', 'Shoulder.R']
+    for bone_name in shoulder_bones:
+        pbone = obj.pose.bones.get(bone_name)
+        if not pbone:
+            print(f"Bone {bone_name} not found.")
+            continue
+            
+        comp = pbone.cloudrig_component
+        comp.component_type = "Shoulder Bone"
+        
+        if hasattr(comp, 'update_ui_bone_sets'):
+            comp.update_ui_bone_sets()
+            
+        def set_param_shoulder(comp, param_name, value):
+            for group_name in dir(comp.params):
+                if group_name.startswith('__'): continue
+                try:
+                    group = getattr(comp.params, group_name)
+                    if hasattr(group, param_name):
+                        setattr(group, param_name, value)
+                        return
+                except Exception:
+                    pass
+            print(f"Warning: Param {param_name} not found for {bone_name}")
+            
+        set_param_shoulder(comp, 'tip_control', True)
+        set_param_shoulder(comp, 'sharp', True)
+        
+        shoulder_bone_set_mapping = {
+            "FK Controls": "Arms",
+            "Stretch Controls": "Arms Tweak"
+        }
+        
+        for prop_name in dir(comp.params.bone_sets):
+            if prop_name.startswith('__') or prop_name in ['name', 'rna_type']: 
+                continue
+            try:
+                bone_set = getattr(comp.params.bone_sets, prop_name)
+                if hasattr(bone_set, 'ui_name') and bone_set.ui_name in shoulder_bone_set_mapping:
+                    target_coll = shoulder_bone_set_mapping[bone_set.ui_name]
+                    if len(bone_set.collections) > 0:
+                        bone_set.collections[0].name = target_coll
+                    else:
+                        bone_set.collections.add().name = target_coll
+            except AttributeError:
+                pass
+
+    upperarm_bones = ['UpperArm.L', 'UpperArm.R']
+    for bone_name in upperarm_bones:
+        pbone = obj.pose.bones.get(bone_name)
+        if not pbone:
+            print(f"Bone {bone_name} not found.")
+            continue
+            
+        comp = pbone.cloudrig_component
+        comp.component_type = "Limb: Generic"
+        
+        if hasattr(comp, 'update_ui_bone_sets'):
+            comp.update_ui_bone_sets()
+            
+        def set_param_upperarm(comp, param_name, value):
+            for group_name in dir(comp.params):
+                if group_name.startswith('__'): continue
+                try:
+                    group = getattr(comp.params, group_name)
+                    if hasattr(group, param_name):
+                        setattr(group, param_name, value)
+                        return
+                except Exception:
+                    pass
+            print(f"Warning: Param {param_name} not found for {bone_name}")
+            
+        set_param_upperarm(comp, 'base_name', "Arm")
+        set_param_upperarm(comp, 'segments', 2)
+        set_param_upperarm(comp, 'tip_control', True)
+        set_param_upperarm(comp, 'hinge', True)
+        set_param_upperarm(comp, 'use_pole', True)
+        set_param_upperarm(comp, 'limit_elbow_axes', True)
+        
+        arm_bone_set_mapping = {
+            "FK Controls": "Arms FK",
+            "FK Controls Extra": "Arms Extra",
+            "IK Child Controls": "Arms Extra",
+            "IK Controls": "Arms IK",
+            "IK Controls Secondary": "Arms Extra",
+            "Stretch Controls": "Arms Tweak"
+        }
+        
+        for prop_name in dir(comp.params.bone_sets):
+            if prop_name.startswith('__') or prop_name in ['name', 'rna_type']: 
+                continue
+            try:
+                bone_set = getattr(comp.params.bone_sets, prop_name)
+                if hasattr(bone_set, 'ui_name') and bone_set.ui_name in arm_bone_set_mapping:
+                    target_coll = arm_bone_set_mapping[bone_set.ui_name]
+                    if len(bone_set.collections) > 0:
+                        bone_set.collections[0].name = target_coll
+                    else:
+                        bone_set.collections.add().name = target_coll
+            except AttributeError:
+                pass
+
+    finger_bones = []
+    for side in ['L', 'R']:
+        for finger in ['Thumb', 'Index', 'Middle', 'Ring', 'Pinky']:
+            finger_bones.append(f'Finger_{finger}1.{side}')
+
+    for bone_name in finger_bones:
+        pbone = obj.pose.bones.get(bone_name)
+        if not pbone:
+            print(f"Bone {bone_name} not found.")
+            continue
+            
+        comp = pbone.cloudrig_component
+        comp.component_type = "Chain: FK"
+        
+        if hasattr(comp, 'update_ui_bone_sets'):
+            comp.update_ui_bone_sets()
+            
+        def set_param_finger(comp, param_name, value):
+            for group_name in dir(comp.params):
+                if group_name.startswith('__'): continue
+                try:
+                    group = getattr(comp.params, group_name)
+                    if hasattr(group, param_name):
+                        setattr(group, param_name, value)
+                        return
+                except Exception:
+                    pass
+            print(f"Warning: Param {param_name} not found for {bone_name}")
+            
+        set_param_finger(comp, 'segments', 1)
+        set_param_finger(comp, 'tip_control', True)
+        set_param_finger(comp, 'hinge', False)
+        set_param_finger(comp, 'create_curl_control', True)
+        set_param_finger(comp, 'inherit_scale', 'PROPAGATE')
+        set_param_finger(comp, 'sharp', True)
+        
+        finger_bone_set_mapping = {
+            "FK Controls": "Fingers",
+            "FK Controls Extra": "Fingers Extra",
+            "FK Curl Control": "Fingers",
+            "Stretch Controls": "Fingers Stretch"
+        }
+        
+        for prop_name in dir(comp.params.bone_sets):
+            if prop_name.startswith('__') or prop_name in ['name', 'rna_type']: 
+                continue
+            try:
+                bone_set = getattr(comp.params.bone_sets, prop_name)
+                if hasattr(bone_set, 'ui_name') and bone_set.ui_name in finger_bone_set_mapping:
+                    target_coll = finger_bone_set_mapping[bone_set.ui_name]
                     if len(bone_set.collections) > 0:
                         bone_set.collections[0].name = target_coll
                     else:

@@ -149,7 +149,65 @@ def process_armature():
             heel.parent = foot
             heel.use_connect = False
 
+    # 7. Create properties bone
+    hips = armature.edit_bones.get("Hips")
+    head_bone = armature.edit_bones.get("Head")
+    if hips and head_bone:
+        prop_bone = armature.edit_bones.get("Properties")
+        if not prop_bone:
+            prop_bone = armature.edit_bones.new("Properties")
+        
+        prop_bone.head = (hips.tail.x, hips.tail.y, head_bone.tail.z + 0.4)
+        prop_bone.tail = (prop_bone.head.x, prop_bone.head.y, prop_bone.head.z + 0.15)
+        prop_bone.roll = 0.0
+        prop_bone.parent = head_bone
+        prop_bone.use_connect = False
+
+    # 8. Set up root bone
+    root_bone = armature.edit_bones.get("Root")
+    if not root_bone:
+        root_bone = armature.edit_bones.new("Root")
+    
+    root_bone.head = (0.0, 0.0, 0.0)
+    root_bone.tail = (0.0, 1.0, 0.0)
+    root_bone.roll = 0.0
+
     bpy.ops.object.mode_set(mode='OBJECT')
+
+    def srgb_to_linear(c):
+        if c <= 0.04045:
+            return c / 12.92
+        else:
+            return ((c + 0.055) / 1.055) ** 2.4
+
+    def hex_to_rgb(h):
+        h = h.lstrip('#')
+        return tuple(srgb_to_linear(int(h[i:i+2], 16) / 255.0) for i in (0, 2, 4))
+
+    # 9. Assign all bones to "Rigging" collection
+    rigging_coll = armature.collections.get("Rigging")
+    if not rigging_coll:
+        rigging_coll = armature.collections.new("Rigging")
+        
+    for bone in armature.bones:
+        rigging_coll.assign(bone)
+
+    # 10. Set colors for Root and Properties bones
+    for b_name, normal_hex in [("Root", "#B078AD"), ("Properties", "#00FF97")]:
+        b = armature.bones.get(b_name)
+        if b:
+            b.color.palette = 'CUSTOM'
+            b.color.custom.normal = hex_to_rgb(normal_hex)
+            b.color.custom.select = hex_to_rgb("#98E5FF")
+            b.color.custom.active = hex_to_rgb("#C4FFFF")
+            
+        pb = obj.pose.bones.get(b_name)
+        if pb:
+            pb.color.palette = 'CUSTOM'
+            pb.color.custom.normal = hex_to_rgb(normal_hex)
+            pb.color.custom.select = hex_to_rgb("#98E5FF")
+            pb.color.custom.active = hex_to_rgb("#C4FFFF")
+
     print("Process complete.")
 
 if __name__ == "__main__":

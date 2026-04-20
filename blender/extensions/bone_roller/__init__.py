@@ -1,5 +1,31 @@
 import bpy
 import math
+from contextlib import contextmanager
+
+
+@contextmanager
+def unlocked_bone_collections(armature):
+    """Temporarily unlock all locked bone collections on an armature.
+
+    CloudRig (and similar generators) lock bone collections, which prevents
+    bones inside them from appearing in selected_editable_bones and blocks
+    property writes.  This context manager unlocks them for the duration of
+    the ``with`` block and re-locks them afterwards.
+    """
+    locked = [bc for bc in armature.collections_all if bc.is_locked]
+    for bc in locked:
+        bc.is_locked = False
+    try:
+        yield
+    finally:
+        for bc in locked:
+            bc.is_locked = True
+
+
+def selected_edit_bones(context):
+    """Return all selected edit bones, bypassing collection locks."""
+    return [b for b in context.object.data.edit_bones if b.select]
+
 
 class BONEROLLER_OT_flip_roll(bpy.types.Operator):
     """Flip bone roll closer to 0 degrees"""
@@ -9,13 +35,16 @@ class BONEROLLER_OT_flip_roll(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return context.mode == 'EDIT_ARMATURE' and context.selected_editable_bones
+        return (context.mode == 'EDIT_ARMATURE'
+                and context.selected_bones)
 
     def execute(self, context):
-        for b in context.selected_editable_bones:
-            r1 = b.roll + math.pi
-            r2 = b.roll - math.pi
-            b.roll = r1 if abs(r1) < abs(r2) else r2
+        armature = context.object.data
+        with unlocked_bone_collections(armature):
+            for b in selected_edit_bones(context):
+                r1 = b.roll + math.pi
+                r2 = b.roll - math.pi
+                b.roll = r1 if abs(r1) < abs(r2) else r2
         return {'FINISHED'}
 
 
@@ -34,11 +63,14 @@ class BONEROLLER_OT_add_roll(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        return context.mode == 'EDIT_ARMATURE' and context.selected_editable_bones
+        return (context.mode == 'EDIT_ARMATURE'
+                and context.selected_bones)
 
     def execute(self, context):
-        for b in context.selected_editable_bones:
-            b.roll += self.angle
+        armature = context.object.data
+        with unlocked_bone_collections(armature):
+            for b in selected_edit_bones(context):
+                b.roll += self.angle
         return {'FINISHED'}
 
 

@@ -9,7 +9,7 @@ def process_armature():
     # Make the selected armature a CloudRig
     obj.cloudrig.enabled = True
     obj.cloudrig.generator.ensure_root = "Root"
-    obj.cloudrig.generator.properties_bone = "Properties"
+    obj.cloudrig.generator.properties_bone = "Root"
     
     # Need to be in pose mode to interact with rig components
     bpy.ops.object.mode_set(mode='POSE')
@@ -351,9 +351,10 @@ def process_armature():
             
         set_param_finger(comp, 'segments', 1)
         set_param_finger(comp, 'tip_control', True)
+        set_param_finger(comp, 'root', True)
         set_param_finger(comp, 'hinge', False)
         set_param_finger(comp, 'create_curl_control', True)
-        set_param_finger(comp, 'inherit_scale', 'PROPAGATE')
+        set_param_finger(comp, 'rot_mode', 'PROPAGATE')
         set_param_finger(comp, 'sharp', True)
         
         finger_bone_set_mapping = {

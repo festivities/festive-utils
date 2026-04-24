@@ -31,30 +31,20 @@ def process_armature():
         if hasattr(comp, 'update_ui_bone_sets'):
             comp.update_ui_bone_sets()
         
-        # Helper to set parameter regardless of which subgroup it's under
-        def set_param(comp, param_name, value):
-            for group_name in dir(comp.params):
-                if group_name.startswith('__'): continue
-                try:
-                    group = getattr(comp.params, group_name)
-                    if hasattr(group, param_name):
-                        setattr(group, param_name, value)
-                        return
-                except Exception:
-                    pass
-            print(f"Warning: Param {param_name} not found for {bone_name}")
-            
-        set_param(comp, 'base_name', "Leg")
-        set_param(comp, 'segments', 2)
-        set_param(comp, 'hinge', True)
-        set_param(comp, 'use_pole', True)
-        set_param(comp, 'world_align', True)
-        set_param(comp, 'limit_elbow_axes', True)
-        set_param(comp, 'use_foot_roll', True)
+        comp.params.parent_switching = True
+        comp.params.base.base_name = "Leg"
+        comp.params.chain.segments = 2
+        comp.params.fk_chain.hinge = True
+        comp.params.ik_chain.use_pole = True
+        comp.params.ik_chain.world_align = True
+        comp.params.limb.limit_elbow_axes = True
+        comp.params.leg.use_foot_roll = True
+        comp.params.default_stretch = 1
+        comp.params.shape_size = 0.2
         
         # Dynamically set the correct side for heel_bone, assuming the user's "HeelPivot.L" implies symmetry
         heel_bone_name = f"HeelPivot.{side}"
-        set_param(comp, 'heel_bone', heel_bone_name)
+        comp.params.leg.heel_bone = heel_bone_name
         
         bone_set_mapping = {
             "FK Controls": "Legs FK",
@@ -88,21 +78,10 @@ def process_armature():
         if hasattr(comp, 'update_ui_bone_sets'):
             comp.update_ui_bone_sets()
             
-        def set_param_hips(comp, param_name, value):
-            for group_name in dir(comp.params):
-                if group_name.startswith('__'): continue
-                try:
-                    group = getattr(comp.params, group_name)
-                    if hasattr(group, param_name):
-                        setattr(group, param_name, value)
-                        return
-                except Exception:
-                    pass
-            print(f"Warning: Param {param_name} not found for Hips")
-            
-        set_param_hips(comp, 'base_name', "Spine")
-        set_param_hips(comp, 'hinge', False)
-        set_param_hips(comp, 'world_align', True)
+        comp.params.base.base_name = "Spine"
+        comp.params.fk_chain.hinge = False
+        comp.params.spine_toon.world_align = True
+        comp.params.shape_size = 0.3
         
         spine_bone_set_mapping = {
             "FK Controls": "Spine FK",
@@ -134,24 +113,14 @@ def process_armature():
         if hasattr(comp, 'update_ui_bone_sets'):
             comp.update_ui_bone_sets()
             
-        def set_param_neck(comp, param_name, value):
-            for group_name in dir(comp.params):
-                if group_name.startswith('__'): continue
-                try:
-                    group = getattr(comp.params, group_name)
-                    if hasattr(group, param_name):
-                        setattr(group, param_name, value)
-                        return
-                except Exception:
-                    pass
-            print(f"Warning: Param {param_name} not found for Neck")
-            
-        set_param_neck(comp, 'segments', 1)
-        set_param_neck(comp, 'root', True)
-        set_param_neck(comp, 'hinge', True)
-        set_param_neck(comp, 'bbone_density', 32)
-        set_param_neck(comp, 'sharp', True)
-        set_param_neck(comp, 'shape_key_helpers', True)
+        comp.params.chain.segments = 1
+        comp.params.chain.tip_control = False
+        comp.params.fk_chain.root = True
+        comp.params.fk_chain.hinge = True
+        comp.params.chain.bbone_density = 32
+        comp.params.chain.sharp = True
+        comp.params.chain.shape_key_helpers = True
+        comp.params.shape_size = 0.4
         
         neck_bone_set_mapping = {
             "FK Controls": "Spine FK",
@@ -181,22 +150,11 @@ def process_armature():
         if hasattr(comp, 'update_ui_bone_sets'):
             comp.update_ui_bone_sets()
             
-        def set_param_head(comp, param_name, value):
-            for group_name in dir(comp.params):
-                if group_name.startswith('__'): continue
-                try:
-                    group = getattr(comp.params, group_name)
-                    if hasattr(group, param_name):
-                        setattr(group, param_name, value)
-                        return
-                except Exception:
-                    pass
-            print(f"Warning: Param {param_name} not found for Head")
-            
-        set_param_head(comp, 'segments', 1)
-        set_param_head(comp, 'tip_control', True)
-        set_param_head(comp, 'root', True)
-        set_param_head(comp, 'hinge', True)
+        comp.params.chain.segments = 1
+        comp.params.chain.tip_control = True
+        comp.params.fk_chain.root = True
+        comp.params.fk_chain.hinge = True
+        comp.params.shape_size = 0.2
         
         head_bone_set_mapping = {
             "FK Controls": "Spine FK",
@@ -231,20 +189,9 @@ def process_armature():
         if hasattr(comp, 'update_ui_bone_sets'):
             comp.update_ui_bone_sets()
             
-        def set_param_shoulder(comp, param_name, value):
-            for group_name in dir(comp.params):
-                if group_name.startswith('__'): continue
-                try:
-                    group = getattr(comp.params, group_name)
-                    if hasattr(group, param_name):
-                        setattr(group, param_name, value)
-                        return
-                except Exception:
-                    pass
-            print(f"Warning: Param {param_name} not found for {bone_name}")
-            
-        set_param_shoulder(comp, 'tip_control', True)
-        set_param_shoulder(comp, 'sharp', True)
+        comp.params.chain.tip_control = True
+        comp.params.chain.sharp = True
+        comp.params.shape_size = 0.3
         
         shoulder_bone_set_mapping = {
             "FK Controls": "Arms",
@@ -277,25 +224,17 @@ def process_armature():
         
         if hasattr(comp, 'update_ui_bone_sets'):
             comp.update_ui_bone_sets()
-            
-        def set_param_upperarm(comp, param_name, value):
-            for group_name in dir(comp.params):
-                if group_name.startswith('__'): continue
-                try:
-                    group = getattr(comp.params, group_name)
-                    if hasattr(group, param_name):
-                        setattr(group, param_name, value)
-                        return
-                except Exception:
-                    pass
-            print(f"Warning: Param {param_name} not found for {bone_name}")
-            
-        set_param_upperarm(comp, 'base_name', "Arm")
-        set_param_upperarm(comp, 'segments', 2)
-        set_param_upperarm(comp, 'tip_control', True)
-        set_param_upperarm(comp, 'hinge', True)
-        set_param_upperarm(comp, 'use_pole', True)
-        set_param_upperarm(comp, 'limit_elbow_axes', True)
+        
+        comp.params.parent_switching = True
+        comp.params.base.base_name = "Arm"
+        comp.params.chain.segments = 2
+        comp.params.chain.tip_control = True
+        comp.params.fk_chain.hinge = True
+        comp.params.ik_chain.use_pole = True
+        comp.params.limb.limit_elbow_axes = True
+        comp.params.shape_size = 0.2
+        comp.params.default_fkik = 0
+        comp.params.default_stretch = 1
         
         arm_bone_set_mapping = {
             "FK Controls": "Arms FK",
@@ -337,25 +276,14 @@ def process_armature():
         if hasattr(comp, 'update_ui_bone_sets'):
             comp.update_ui_bone_sets()
             
-        def set_param_finger(comp, param_name, value):
-            for group_name in dir(comp.params):
-                if group_name.startswith('__'): continue
-                try:
-                    group = getattr(comp.params, group_name)
-                    if hasattr(group, param_name):
-                        setattr(group, param_name, value)
-                        return
-                except Exception:
-                    pass
-            print(f"Warning: Param {param_name} not found for {bone_name}")
-            
-        set_param_finger(comp, 'segments', 1)
-        set_param_finger(comp, 'tip_control', True)
-        set_param_finger(comp, 'root', True)
-        set_param_finger(comp, 'hinge', False)
-        set_param_finger(comp, 'create_curl_control', True)
-        set_param_finger(comp, 'rot_mode', 'PROPAGATE')
-        set_param_finger(comp, 'sharp', True)
+        comp.params.chain.segments = 1
+        comp.params.chain.tip_control = True
+        comp.params.fk_chain.root = True
+        comp.params.fk_chain.hinge = False
+        comp.params.fk_chain.create_curl_control = True
+        comp.params.fk_chain.rot_mode = 'PROPAGATE'
+        comp.params.chain.sharp = True
+        comp.params.shape_size = 0.4
         
         finger_bone_set_mapping = {
             "FK Controls": "Fingers",
@@ -391,21 +319,9 @@ def process_armature():
         if hasattr(comp, 'update_ui_bone_sets'):
             comp.update_ui_bone_sets()
             
-        def set_param_eye(comp, param_name, value):
-            for group_name in dir(comp.params):
-                if group_name.startswith('__'): continue
-                try:
-                    group = getattr(comp.params, group_name)
-                    if hasattr(group, param_name):
-                        setattr(group, param_name, value)
-                        return
-                except Exception:
-                    pass
-            print(f"Warning: Param {param_name} not found for {bone_name}")
-            
-        set_param_eye(comp, 'group', "Eyes")
-        set_param_eye(comp, 'deform', True)
-        set_param_eye(comp, 'root', True)
+        comp.params.aim.group = "Eyes"
+        comp.params.aim.deform = True
+        comp.params.aim.root = True
         
         eye_bone_set_mapping = {
             "Aim Group Target Control": "Face Main",
@@ -440,21 +356,10 @@ def process_armature():
         if hasattr(comp, 'update_ui_bone_sets'):
             comp.update_ui_bone_sets()
             
-        def set_param_breast(comp, param_name, value):
-            for group_name in dir(comp.params):
-                if group_name.startswith('__'): continue
-                try:
-                    group = getattr(comp.params, group_name)
-                    if hasattr(group, param_name):
-                        setattr(group, param_name, value)
-                        return
-                except Exception:
-                    pass
-            print(f"Warning: Param {param_name} not found for {bone_name}")
-            
-        set_param_breast(comp, 'base_name', "Breast")
-        set_param_breast(comp, 'tip_control', True)
-        set_param_breast(comp, 'hinge', False)
+        comp.params.base.base_name = "Breast"
+        comp.params.chain.tip_control = True
+        comp.params.fk_chain.hinge = False
+        comp.params.shape_size = 0.3
         
         breast_bone_set_mapping = {
             "FK Controls": "Spine",

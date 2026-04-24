@@ -53,6 +53,8 @@ def add_cloud_human_bone_collections():
     get_or_create("Physics Extra", "Physics")
 
     get_or_create("Weapon")
+    get_or_create("Weapon Stretch", "Weapon")
+    get_or_create("Weapon Extra", "Weapon")
     
     get_or_create("Root")
     

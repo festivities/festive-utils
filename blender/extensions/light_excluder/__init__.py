@@ -34,8 +34,8 @@ def _link_item_to_collection(coll, item):
     Returns True if newly linked.
     """
     if isinstance(item, bpy.types.Collection):
-        existing = {c.collection for c in coll.collection_children}
-        if item not in existing:
+        # coll.children yields Collection objects; compare by name to be safe
+        if all(c.name != item.name for c in coll.children):
             coll.children.link(item)
             return True
     else:
@@ -50,11 +50,14 @@ def _set_link_state(coll, item, state):
     """
     Set the light-linking state of *item* inside *coll* to *state*
     ('INCLUDE' or 'EXCLUDE').
+    CollectionChild exposes neither .collection nor string key lookup, so we
+    zip coll.children (Collection objects) with coll.collection_children
+    (CollectionChild wrappers) — they share the same order.
     """
     if isinstance(item, bpy.types.Collection):
-        for child in coll.collection_children:
-            if child.collection == item:
-                child.light_linking.link_state = state
+        for child_coll, child_wrapper in zip(coll.children, coll.collection_children):
+            if child_coll.name == item.name:
+                child_wrapper.light_linking.link_state = state
                 return
     else:
         for obj_entry in coll.collection_objects:

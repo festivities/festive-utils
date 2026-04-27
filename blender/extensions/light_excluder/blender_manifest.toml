@@ -1,0 +1,14 @@
+schema_version = "1.0.0"
+
+id = "light_excluder"
+version = "1.0.0"
+name = "Light Excluder"
+tagline = "Batch exclude objects/collections from multiple lights' linking"
+maintainer = "Antigravity"
+type = "add-on"
+
+blender_version_min = "4.2.0"
+
+license = [
+    "SPDX-License-Identifier: GPL-2.0-or-later",
+]

@@ -1,0 +1,11 @@
+schema_version = "1.0.0"
+id = "auto_cubic_interpolation"
+version = "1.0.0"
+name = "Auto Cubic Interpolation"
+tagline = "Automatically sets new Image Texture nodes interpolation to Cubic"
+maintainer = "Gemini 3.1 Pro"
+type = "add-on"
+blender_version_min = "4.2.0"
+license = [
+  "SPDX:GPL-3.0-or-later"
+]

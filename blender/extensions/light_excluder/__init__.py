@@ -90,25 +90,15 @@ def _apply_link_action(lights, items, link_mode, action):
     for light in lights:
         for item in items:
             if do_light:
-                if action == 'EXCLUDE':
-                    coll = _ensure_linking_collection(light, 'receiver_collection')
-                    _link_item_to_collection(coll, item)
-                    _set_link_state(coll, item, 'EXCLUDE')
-                else:
-                    coll = getattr(light.light_linking, 'receiver_collection')
-                    if coll is not None:
-                        _set_link_state(coll, item, 'INCLUDE')
+                coll = _ensure_linking_collection(light, 'receiver_collection')
+                _link_item_to_collection(coll, item)
+                _set_link_state(coll, item, action)
                 count += 1
 
             if do_shadow:
-                if action == 'EXCLUDE':
-                    coll = _ensure_linking_collection(light, 'blocker_collection')
-                    _link_item_to_collection(coll, item)
-                    _set_link_state(coll, item, 'EXCLUDE')
-                else:
-                    coll = getattr(light.light_linking, 'blocker_collection')
-                    if coll is not None:
-                        _set_link_state(coll, item, 'INCLUDE')
+                coll = _ensure_linking_collection(light, 'blocker_collection')
+                _link_item_to_collection(coll, item)
+                _set_link_state(coll, item, action)
                 count += 1
     return count
 

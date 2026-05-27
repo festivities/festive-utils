@@ -1,0 +1,11 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "blender-mcp": {
+      "type": "local",
+      "command": ["D:\\dev\\projects\\blender_mcp\\mcp\\venv\\Scripts\\blender-mcp.exe"],
+      "enabled": true,
+      "environment": {}
+    }
+  }
+}
